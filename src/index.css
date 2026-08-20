@@ -1,0 +1,292 @@
+@import 'tailwindcss';
+
+/* Self-hosted, no <link> to Google Fonts.
+   wdth.css, not index.css: the default Archivo Variable build carries only a
+   weight axis, so `font-stretch` would silently do nothing and the display would
+   render at normal width. This build exposes wdth 62-125. */
+@import '@fontsource-variable/archivo/wdth.css';
+
+/* Croatian needs latin and latin-ext. Skipping the Cyrillic subsets keeps them
+   out of the build entirely. */
+@import '@fontsource/martian-mono/latin-400.css';
+@import '@fontsource/martian-mono/latin-ext-400.css';
+@import '@fontsource/martian-mono/latin-500.css';
+@import '@fontsource/martian-mono/latin-ext-500.css';
+@import '@fontsource/martian-mono/latin-700.css';
+@import '@fontsource/martian-mono/latin-ext-700.css';
+
+/* ---------------------------------------------------------------------------
+   Design tokens. Every value here is measured, not guessed: see SPEC.md section
+   3 and `npm run check:contrast`.
+   --------------------------------------------------------------------------- */
+@theme {
+  /* Ink ladder. Depth comes from these five steps plus hairlines, never shadow. */
+  --color-ink-000: #07080a;
+  --color-ink-010: #0c0e11;
+  --color-ink-020: #121519;
+  --color-ink-030: #191d23;
+  --color-line: #232830;
+  --color-line-strong: #39414c;
+
+  /* Text. --color-muted is the floor at 5.24:1; nothing quieter ships. */
+  --color-text: #e8eaed;
+  --color-dim: #9ba2ac;
+  --color-muted: #7c838d;
+
+  /* The one accent. 5.44:1 on the page, so it is legal as text, not only as decor. */
+  --color-red: #ff2d3f;
+  --color-red-deep: #b00c19;
+
+  --font-display: 'Archivo Variable', 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Archivo Variable', 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Martian Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  /* One radius system: sharp. 2px on interactive, 0 on full-bleed surfaces. */
+  --radius-edge: 2px;
+
+  /* Motion. ease-in is never used on UI: it delays exactly the moment the eye
+     is watching hardest. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-move: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* Semantic z-index scale. No arbitrary 9999 anywhere in the codebase. */
+:root {
+  --z-sticky: 30;
+  --z-drawer-scrim: 40;
+  --z-drawer: 50;
+  --z-fab: 35;
+  --z-grain: 60;
+  --z-skip: 70;
+
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background-color: var(--color-ink-000);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-stretch: 100%;
+    font-size: 1rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* Light type on dark reads lighter than it is, so the whole page carries
+       slightly more leading than a light-mode equivalent would. */
+  }
+
+  /* Display face. The width axis is what makes this read as stamped signage
+     rather than as a bold sans. */
+  h1,
+  h2,
+  h3,
+  .u-display {
+    font-family: var(--font-display);
+    font-stretch: 125%; /* the Expanded cut. This is the whole display premise. */
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.02em; /* floor is -0.04em; anything tighter and letters touch */
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Numerals never reflow. Credits, prices and codes are all tabular. */
+  .u-num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+    letter-spacing: -0.03em;
+  }
+
+  /* Small HUD-flavoured label. Used for functional labels only, never as a
+     decorative eyebrow above a section heading. */
+  .u-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  ::selection {
+    background: var(--color-red);
+    color: var(--color-ink-000);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-red);
+    outline-offset: 2px;
+    border-radius: 1px;
+  }
+
+  /* Focus rings are never removed, only replaced where the element draws its own. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* iOS refuses to stop zooming on focus below 16px. */
+  input,
+  textarea,
+  select {
+    font-size: max(1rem, 16px);
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+}
+
+@layer components {
+  /* Shared page gutter. Widens with the viewport instead of staying pinned. */
+  .u-shell {
+    width: 100%;
+    max-width: 88rem;
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 4vw, 3.5rem);
+  }
+
+  /* Fluid display scale, ratio >= 1.25, ceiling 6rem. */
+  .u-d1 {
+    font-size: clamp(2.75rem, 1.6rem + 5.2vw, 6rem);
+  }
+
+  /* The hero headline runs against a half-shell column, not the full shell, so
+     it carries its own shallower curve. The numbers are not guessed: Archivo at
+     wdth 125 / weight 800 renders "ZA REPUTACIJU" at almost exactly 10.1x the
+     font size, and this curve keeps that under the column width from 360px up.
+     Two lines on every viewport, never four. */
+  .u-hero {
+    font-size: clamp(2rem, 0.1625rem + 3.85vw, 3.625rem);
+  }
+
+  /* Full bleed to the right viewport edge from inside the centred shell.
+     The offset is the exact distance from the shell content edge to the
+     viewport edge: half the leftover width, plus the shell gutter. */
+  .u-bleed-right {
+    margin-right: calc(-1 * ((100vw - min(88rem, 100vw)) / 2 + clamp(1rem, 4vw, 3.5rem)));
+  }
+  .u-d2 {
+    font-size: clamp(2rem, 1.3rem + 3.1vw, 3.75rem);
+  }
+  .u-d3 {
+    font-size: clamp(1.5rem, 1.15rem + 1.6vw, 2.25rem);
+  }
+
+  /* Hairline. The single most-used structural device on the site. */
+  .u-rule {
+    border-color: var(--color-line);
+  }
+
+  /* Pressable. Every interactive element gets the same 140ms press. */
+  .u-press {
+    transition:
+      transform 140ms var(--ease-out),
+      background-color 160ms var(--ease-out),
+      border-color 160ms var(--ease-out),
+      color 160ms var(--ease-out);
+  }
+  .u-press:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  /* Scroll reveal. The default state is VISIBLE. The hidden state is applied by
+     JS only once an observer is attached, so a no-JS or headless render never
+     ships a blank section. */
+  .u-reveal {
+    transition:
+      opacity 620ms var(--ease-out),
+      transform 620ms var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .u-reveal[data-reveal='hidden'] {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  /* One marquee per page. Paused on hover and under reduced motion. */
+  .u-marquee-track {
+    animation: u-marquee 46s linear infinite;
+  }
+  .u-marquee:hover .u-marquee-track,
+  .u-marquee:focus-within .u-marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes u-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Reduced motion is not a courtesy. Movement goes, meaning stays. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .u-reveal[data-reveal='hidden'] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .u-press:active:not(:disabled) {
+    transform: none;
+  }
+
+  .u-marquee-track {
+    animation: none;
+    transform: none;
+  }
+}
+
+/* Hover effects are gated so a tap on a phone does not latch a hover state. */
+@media (hover: hover) and (pointer: fine) {
+  .u-lift {
+    transition:
+      transform 240ms var(--ease-out),
+      border-color 240ms var(--ease-out);
+  }
+  .u-lift:hover {
+    transform: translateY(-3px);
+  }
+}

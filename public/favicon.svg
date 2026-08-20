@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Axis RolePlay">
+  <rect width="32" height="32" fill="#07080A"/>
+  <path d="M5.5 27 L16 5 L26.5 27" fill="none" stroke="#E8EAED" stroke-width="4.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+  <rect x="1" y="18.2" width="30" height="3.4" fill="#FF2D3F"/>
+</svg>
