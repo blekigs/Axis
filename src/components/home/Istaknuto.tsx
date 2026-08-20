@@ -33,13 +33,14 @@ function Celija({
         veliko ? 'min-h-[26rem]' : 'min-h-[15rem]'
       }`}
     >
-      <MediaOkvir intenzitet="jako" className="absolute inset-0">
+      <MediaOkvir intenzitet="jako" popuni>
         <Media
           id={proizvod.slika}
           alt={proizvod.alt}
           sirina={veliko ? 900 : 800}
           visina={veliko ? 1100 : 500}
           sizes={veliko ? '(min-width: 1024px) 42vw, 92vw' : '(min-width: 1024px) 46vw, 92vw'}
+          popuni
           className="transition-transform duration-[700ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-[1.04]"
         />
       </MediaOkvir>

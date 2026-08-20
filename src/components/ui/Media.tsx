@@ -10,6 +10,9 @@ interface Props {
   prioritet?: boolean
   kvaliteta?: number
   sizes?: string
+  /** Inside a filling frame the height is already definite, so the flow
+      aspect-ratio reservation is dropped rather than left to compete. */
+  popuni?: boolean
 }
 
 /**
@@ -29,6 +32,7 @@ export function Media({
   prioritet = false,
   kvaliteta = 70,
   sizes,
+  popuni = false,
 }: Props) {
   return (
     <img
@@ -42,7 +46,7 @@ export function Media({
       decoding={prioritet ? 'sync' : 'async'}
       fetchPriority={prioritet ? 'high' : 'auto'}
       className={`h-full w-full object-cover ${className}`}
-      style={{ aspectRatio: `${sirina} / ${visina}` }}
+      style={popuni ? undefined : { aspectRatio: `${sirina} / ${visina}` }}
     />
   )
 }
@@ -53,10 +57,21 @@ export function Media({
  */
 export function MediaOkvir({
   intenzitet = 'srednje',
+  popuni = false,
   className = '',
   children,
 }: {
   intenzitet?: 'lagano' | 'srednje' | 'jako'
+  /**
+   * Fill the nearest positioned ancestor instead of sitting in flow.
+   *
+   * This is a prop rather than something the caller passes through
+   * `className`, because `absolute` in `className` and the `relative` in the
+   * base string are the same CSS property: which one wins comes down to the
+   * order Tailwind happens to emit them in, not to intent. That race silently
+   * left a bento cell with a black band above its photograph.
+   */
+  popuni?: boolean
   className?: string
   children: React.ReactNode
 }) {
@@ -69,7 +84,7 @@ export function MediaOkvir({
   return (
     <div
       className={
-        'relative overflow-hidden bg-ink-020 ' +
+        `${popuni ? 'absolute inset-0' : 'relative'} overflow-hidden bg-ink-020 ` +
         'after:pointer-events-none after:absolute after:inset-0 ' +
         `${scrim} ${className}`
       }
