@@ -45,8 +45,11 @@ anything.
 
 `DISCORD_URL`, `TIKTOK_URL` and `INSTAGRAM_URL` in `src/data/sadrzaj.ts` point at
 `discord.gg/axisroleplay` and matching handles. **These are guesses and almost certainly do not
-exist.** Replace them before publishing. The same applies to `axisroleplay.hr` in `index.html`
-(canonical, Open Graph and JSON-LD).
+exist.** Replace them before publishing.
+
+The domain is no longer a placeholder: the site is live on `axis-roleplay.store`, and the canonical,
+Open Graph and JSON-LD URLs in `index.html` point there. `og.jpg` is still missing, so link previews
+render without an image until a 1200x630 file is added to `public/`.
 
 ## Images
 
