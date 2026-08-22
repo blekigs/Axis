@@ -15,21 +15,15 @@ export function Logo({ className = '', kompaktno = false }: Props) {
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <svg
-        viewBox="0 0 32 32"
+        viewBox="0 0 1024 1024"
         width="26"
         height="26"
         aria-hidden="true"
         focusable="false"
         className="shrink-0"
       >
-        <path
-          d="M5.5 27 L16 5 L26.5 27"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="4.2"
-          strokeLinejoin="miter"
-        />
-        <rect x="1" y="18.2" width="30" height="3.4" fill="var(--color-red)" />
+        <path fill="var(--color-red)" d="M88 138 L482 432 L486 464 L485 824 L477 825 L375 678 L375 545 Z" />
+        <path fill="var(--color-red)" d="M933 139 L542 433 L542 825 L561 808 L648 683 L648 544 L800 427 Z" />
       </svg>
 
       <span className="flex flex-col leading-none">
