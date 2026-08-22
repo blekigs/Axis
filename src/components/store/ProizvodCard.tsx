@@ -1,7 +1,7 @@
 import { Check } from 'lucide-react'
 import type { Oznaka, Proizvod } from '../../types'
 import { Media, MediaOkvir } from '../ui/Media'
-import { Cijena } from '../ui/Cijena'
+import { CijenaProizvoda } from '../ui/Cijena'
 import { formatirajBroj } from '../../lib/format'
 import { DodajGumb } from './DodajGumb'
 import { useStore } from '../../context/StoreContext'
@@ -20,7 +20,7 @@ interface Props {
 export function ProizvodCard({ proizvod, onOtvori }: Props) {
   const { kupljeno, crediti } = useStore()
   const vecKupljeno = kupljeno.includes(proizvod.id)
-  const preskupo = proizvod.cijena > crediti
+  const preskupo = proizvod.cijena !== null && proizvod.cijena > crediti
 
   return (
     <article className="u-lift group flex h-full flex-col border border-line bg-ink-010 hover:border-line-strong">
@@ -83,13 +83,13 @@ export function ProizvodCard({ proizvod, onOtvori }: Props) {
 
         <div className="mt-auto pt-6">
           <div className="flex items-end justify-between gap-4">
-            <Cijena iznos={proizvod.cijena} velicina="lg" />
+            <CijenaProizvoda cijena={proizvod.cijena} cijenaEur={proizvod.cijenaEur} velicina="lg" />
             <DodajGumb proizvod={proizvod} />
           </div>
 
           {/* Its own row, and it names the gap. A wrapping label beside the
               price crowded the button and said less. */}
-          {preskupo && (
+          {preskupo && proizvod.cijena !== null && (
             <p className="u-label mt-3 text-muted">
               Nedostaje {formatirajBroj(proizvod.cijena - crediti)}
             </p>

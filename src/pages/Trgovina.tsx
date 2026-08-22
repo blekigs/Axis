@@ -6,6 +6,7 @@ import { KATEGORIJE, PROIZVODI } from '../data/proizvodi'
 import { ProizvodCard } from '../components/store/ProizvodCard'
 import { ProizvodDialog } from '../components/store/ProizvodDialog'
 import { NadoplatiGumb } from '../components/store/NadoplatiGumb'
+import { PaketiCredita } from '../components/store/PaketiCredita'
 import { Reveal } from '../components/ui/Reveal'
 import { useStore } from '../context/StoreContext'
 import { crediti, formatirajBroj } from '../lib/format'
@@ -18,11 +19,18 @@ function jeFilter(v: string | null): v is Filter {
 }
 
 /**
- * Category order first, price second. Sorting the whole catalogue by price alone
- * opens the store on a 350 credit number plate: the cheapest thing here and the
- * least representative of what anyone comes to buy.
+ * Category order first, name second. Credit prices are not set on any item
+ * yet, so there is nothing numeric to sort by within a category — see
+ * PLACEHOLDERS.md.
  */
-const REDOSLIJED: Kategorija[] = ['vozila', 'bande', 'nekretnine', 'ostalo']
+const REDOSLIJED: Kategorija[] = [
+  'automobili',
+  'custom-organizacije',
+  'organizacije',
+  'dodaci',
+  'biznis',
+  'ostalo',
+]
 
 export default function Trgovina() {
   useSeo({
@@ -43,7 +51,7 @@ export default function Trgovina() {
     const lista = aktivna === 'sve' ? PROIZVODI : PROIZVODI.filter((p) => p.kategorija === aktivna)
     return [...lista].sort((a, b) => {
       const razlika = REDOSLIJED.indexOf(a.kategorija) - REDOSLIJED.indexOf(b.kategorija)
-      return razlika !== 0 ? razlika : a.cijena - b.cijena
+      return razlika !== 0 ? razlika : a.naziv.localeCompare(b.naziv, 'hr')
     })
   }, [aktivna])
 
@@ -131,6 +139,24 @@ export default function Trgovina() {
           <p className="mt-4 max-w-[62ch] text-[0.875rem] leading-relaxed text-muted">
             {meta.opis}
           </p>
+
+          {meta.napomena && (
+            <p className="u-label mt-3 inline-block border border-line-strong px-2.5 py-1.5 text-dim">
+              {meta.napomena}
+            </p>
+          )}
+        </div>
+      </section>
+
+      <section className="border-b border-line">
+        <div className="u-shell py-14 lg:py-20">
+          <h2 className="u-d3 max-w-[20ch]">Nadoplati credite</h2>
+          <p className="mt-3 max-w-[52ch] text-[0.9375rem] leading-relaxed text-dim">
+            Krediti se troše u trgovini gore. Nadoplata ide isključivo preko Tebex-a, nema drugog
+            načina plaćanja.
+          </p>
+
+          <PaketiCredita className="mt-8" />
         </div>
       </section>
 

@@ -29,12 +29,28 @@ export function DodajGumb({
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
   const kolicina = uKosarici(proizvod.id)
+  const bezCijene = proizvod.cijena === null
 
   function naKlik() {
+    if (bezCijene) return
     dodaj(proizvod)
     setPotvrda(true)
     window.clearTimeout(timer.current)
     timer.current = window.setTimeout(() => setPotvrda(false), 1400)
+  }
+
+  if (bezCijene) {
+    return (
+      <Button
+        aria-disabled="true"
+        onClick={(e) => e.preventDefault()}
+        velicina={velicina}
+        varijanta="sekundarno"
+        className={`text-dim ${className}`}
+      >
+        Cijena uskoro
+      </Button>
+    )
   }
 
   return (

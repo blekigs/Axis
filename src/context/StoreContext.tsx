@@ -32,12 +32,14 @@ type Akcija =
 const pocetno: Stanje = { crediti: POCETNI_CREDITI, stavke: [], kupljeno: [] }
 
 function zbroj(stavke: StavkaKosarice[]): number {
-  return stavke.reduce((s, x) => s + x.proizvod.cijena * x.kolicina, 0)
+  return stavke.reduce((s, x) => s + (x.proizvod.cijena ?? 0) * x.kolicina, 0)
 }
 
 function reducer(stanje: Stanje, akcija: Akcija): Stanje {
   switch (akcija.tip) {
     case 'dodaj': {
+      // Nothing without a credit price yet can enter the cart.
+      if (akcija.proizvod.cijena === null) return stanje
       const postoji = stanje.stavke.find((s) => s.proizvod.id === akcija.proizvod.id)
       if (postoji) {
         return {

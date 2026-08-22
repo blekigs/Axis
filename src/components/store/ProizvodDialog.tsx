@@ -2,7 +2,7 @@ import { X } from 'lucide-react'
 import type { Proizvod } from '../../types'
 import { useDialog } from '../../hooks/useDialog'
 import { Media, MediaOkvir } from '../ui/Media'
-import { Cijena } from '../ui/Cijena'
+import { CijenaProizvoda } from '../ui/Cijena'
 import { DodajGumb } from './DodajGumb'
 import { useStore } from '../../context/StoreContext'
 import { crediti } from '../../lib/format'
@@ -89,12 +89,18 @@ export function ProizvodDialog({ proizvod, zatvori }: Props) {
                   <div>
                     <p className="u-label text-muted">Cijena</p>
                     <div className="mt-1.5">
-                      <Cijena iznos={proizvod.cijena} velicina="lg" />
+                      <CijenaProizvoda
+                        cijena={proizvod.cijena}
+                        cijenaEur={proizvod.cijenaEur}
+                        velicina="lg"
+                      />
                     </div>
                     <p className="mt-2 text-[0.75rem] text-muted">
-                      {proizvod.cijena > stanje
-                        ? `Nedostaje ti ${crediti(proizvod.cijena - stanje)}.`
-                        : `Nakon kupnje ostaje ti ${crediti(stanje - proizvod.cijena)}.`}
+                      {proizvod.cijena === null
+                        ? 'Cijena u creditima još nije objavljena.'
+                        : proizvod.cijena > stanje
+                          ? `Nedostaje ti ${crediti(proizvod.cijena - stanje)}.`
+                          : `Nakon kupnje ostaje ti ${crediti(stanje - proizvod.cijena)}.`}
                     </p>
                   </div>
 

@@ -192,7 +192,7 @@ export function Kosarica() {
                         kolicina={s.kolicina}
                         naziv={s.proizvod.naziv}
                       />
-                      <Cijena iznos={s.proizvod.cijena * s.kolicina} velicina="sm" />
+                      <Cijena iznos={(s.proizvod.cijena ?? 0) * s.kolicina} velicina="sm" />
                     </div>
                   </div>
                 </li>

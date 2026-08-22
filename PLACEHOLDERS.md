@@ -12,15 +12,23 @@ one of them with what is actually true before this goes live.
 
 ## Products
 
-`src/data/proizvodi.ts` is the only file to edit. All 15 products are invented:
+`src/data/proizvodi.ts` is the only file to edit. It holds the real category and item list (six
+categories: automobili, custom organizacije, organizacije, dodaci za organizaciju, biznis, ostalo).
+What is still a placeholder:
 
-- Vehicle names (Kessler K90, Torrent RS, Vasco Corsa, Halden Ranger, Meridian Sprinter) are made up
-  so they do not use real manufacturer trademarks or in-game asset names.
-- Prices are chosen to exercise the demo, not to reflect a real economy. Roughly half sit under the
-  2500 starting balance and half above it, so both the buy path and the "not enough credits" path
-  are visible without editing anything.
-- Product codes (`AX-V-104`) follow a made-up scheme: category letter plus a number.
-- Specification values (capacities, seat counts, key counts) are invented.
+- **Every `cijena` is `null`.** No item has a credit price yet. The UI shows "Cijena uskoro" and the
+  add-to-cart button is disabled until a number is set. Fill in `cijena` in `proizvodi.ts` per item
+  as prices are decided — nothing else needs to change.
+- **`organizacije` is the one category with a real price**, but it's fixed in euros, not credits:
+  `cijenaEur: 10` for any donatorska mafija, `cijenaEur: 25` for any državna organizacija (the rule
+  is also shown as a badge on that category tab). Its `cijena` in credits is still `null` — once a
+  credit price is set for it too, `CijenaProizvoda` (`src/components/ui/Cijena.tsx`) will show the
+  euro figure alone until then, and should be revisited once both exist.
+- Product codes (e.g. `AX-D-401`) follow a made-up scheme: category letter plus a number.
+- Specification values on each card (capacities, slot counts, access rules) are short plausible
+  labels, not sourced from an actual server config.
+- Descriptive copy (`opis`, `detalj`) is written for the demo and should read true to how the item
+  actually works in-game before this goes live.
 
 ## Money
 
@@ -28,6 +36,9 @@ one of them with what is actually true before this goes live.
   amount.
 - The 2500 starting credit balance is a demo value, set in `POCETNI_CREDITI` in
   `src/data/sadrzaj.ts`.
+- The seven credit top-up packs in `src/data/paketi.ts` (5 €→500 C ... 100 €→17000 C) are the real
+  bundle figures. They're shown on the Trgovina page but not wired to Tebex — the CTA on every pack
+  is the same "Uskoro, putem Tebex-a" placeholder used elsewhere.
 
 ## Testimonials
 
@@ -62,6 +73,10 @@ entirely purple and magenta, which the brief rules out.
 
 Images are requested with `crop=entropy` so the tall and square crops land on the subject rather
 than on empty night sky.
+
+The catalogue now has ~29 items and draws from the same reviewed set of ~28 photo ids, so a handful
+of ids are reused across unrelated products (e.g. the same phone close-up stands in for both
+"Custom biznis" and "Custom broj telefona"). Each reuse keeps its accurate alt text for that photo.
 
 When real screenshots exist, swap the `slika` ids in `proizvodi.ts` and `sadrzaj.ts` and rewrite the
 `alt` text to match. Nothing else needs to change.

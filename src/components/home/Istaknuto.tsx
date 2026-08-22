@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import type { Proizvod } from '../../types'
 import { ISTAKNUTI_ID, proizvodPoId } from '../../data/proizvodi'
 import { Media, MediaOkvir } from '../ui/Media'
-import { Cijena } from '../ui/Cijena'
+import { CijenaProizvoda } from '../ui/Cijena'
 import { DodajGumb } from '../store/DodajGumb'
 import { ProizvodDialog } from '../store/ProizvodDialog'
 import { Reveal } from '../ui/Reveal'
@@ -72,7 +72,11 @@ function Celija({
         </p>
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-          <Cijena iznos={proizvod.cijena} velicina={veliko ? 'lg' : 'md'} />
+          <CijenaProizvoda
+            cijena={proizvod.cijena}
+            cijenaEur={proizvod.cijenaEur}
+            velicina={veliko ? 'lg' : 'md'}
+          />
           <DodajGumb proizvod={proizvod} />
         </div>
       </div>
